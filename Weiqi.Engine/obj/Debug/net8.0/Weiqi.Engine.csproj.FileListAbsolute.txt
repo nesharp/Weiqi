@@ -1,0 +1,12 @@
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\bin\Debug\net8.0\Weiqi.Engine.deps.json
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\bin\Debug\net8.0\Weiqi.Engine.dll
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\bin\Debug\net8.0\Weiqi.Engine.pdb
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.AssemblyInfoInputs.cache
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.AssemblyInfo.cs
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.csproj.CoreCompileInputs.cache
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.sourcelink.json
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.dll
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\refint\Weiqi.Engine.dll
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\Weiqi.Engine.pdb
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Engine\obj\Debug\net8.0\ref\Weiqi.Engine.dll
