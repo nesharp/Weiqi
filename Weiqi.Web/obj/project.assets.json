@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net8.0-windows7.0": {}
+    "net8.0-windows7.0": {
+      "Weiqi.Engine/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Weiqi.Engine.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Weiqi.Engine.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Weiqi.Engine/1.0.0": {
+      "type": "project",
+      "path": "../Weiqi.Engine/Weiqi.Engine.csproj",
+      "msbuildProject": "../Weiqi.Engine/Weiqi.Engine.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0-windows7.0": []
+    "net8.0-windows7.0": [
+      "Weiqi.Engine >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\neste\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\neste\\RiderProjects\\Weiqi\\Weiqi.Engine\\Weiqi.Engine.csproj": {
+              "projectPath": "C:\\Users\\neste\\RiderProjects\\Weiqi\\Weiqi.Engine\\Weiqi.Engine.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

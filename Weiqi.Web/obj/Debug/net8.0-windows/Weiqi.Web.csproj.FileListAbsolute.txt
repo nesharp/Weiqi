@@ -18,3 +18,7 @@ C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\refint\Wei
 C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\Weiqi.Web.pdb
 C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\Weiqi.Web.genruntimeconfig.cache
 C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\ref\Weiqi.Web.dll
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\bin\Debug\net8.0-windows\Weiqi.Engine.dll
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\bin\Debug\net8.0-windows\Weiqi.Engine.pdb
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\Weiqi.Web.csproj.AssemblyReference.cache
+C:\Users\neste\RiderProjects\Weiqi\Weiqi.Web\obj\Debug\net8.0-windows\Weiqi.Web.csproj.Up2Date

@@ -3,6 +3,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Weiqi.Engine.Game;
+using Weiqi.Engine.Interfaces;
+using Weiqi.Engine.Models;
+using Weiqi.Engine.Players;
 
 namespace WeiqiApp
 {
@@ -11,12 +15,19 @@ namespace WeiqiApp
         private int boardSize = 19; // Розмір дошки 19x19
         private double canvasSize = 600; // Розмір Canvas
         private double cellSize; // Розмір клітинки
-
+        private readonly Board board;
+        private IPlayer firstPlayer;
+        private IPlayer secondPlayer;
+        private IPlayer currentPlayer;
         public MainWindow()
         {
             InitializeComponent();
             InitializeBoard();
             DrawBoard();
+            this.board = new Board(boardSize);
+            this.firstPlayer = new HumanPlayer(Stone.Black);
+            this.secondPlayer = new HumanPlayer(Stone.White);
+            this.currentPlayer = this.firstPlayer;  
         }
 
         private void InitializeBoard()
@@ -109,24 +120,21 @@ namespace WeiqiApp
             // Викликаємо метод двигуна гри для розміщення каменя
             // Наприклад: bool success = gameEngine.PlaceStone(x, y, currentPlayer);
 
-            // Припустимо, що розміщення успішне
             bool success = true; // Замініть на реальний виклик двигуна
-
             if (success)
             {
-                // Малюємо камінь на дошці
+                // this.board.PlaceStone(new Position(x, y), currentPlayer.Stone == Stone.Black ? Stone.Black : Stone.White);
                 Ellipse stone = new Ellipse
                 {
                     Width = cellSize - 4,
                     Height = cellSize - 4,
-                    Fill = Brushes.Black // Змініть на колір гравця
+                    Fill = currentPlayer.Stone == Stone.Black ? Brushes.Black : Brushes.White, 
                 };
                 Canvas.SetLeft(stone, x * cellSize - (stone.Width / 2));
                 Canvas.SetTop(stone, y * cellSize - (stone.Height / 2));
                 BoardCanvas.Children.Add(stone);
-
-                // Змінюємо поточного гравця
-                // currentPlayer = (currentPlayer == Player.Black) ? Player.White : Player.Black;
+                
+                this.currentPlayer = this.currentPlayer == firstPlayer ? this.secondPlayer : this.firstPlayer;  
             }
             else
             {

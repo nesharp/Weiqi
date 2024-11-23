@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Weiqi.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+723ce1b224035b6853d02564d96d26a5246c42eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b93d0ec5c8746384b4cc1405871f8de5a58cfe62")]
 [assembly: System.Reflection.AssemblyProductAttribute("Weiqi.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Weiqi.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
