@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Weiqi.Engine")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2871f46543cddbfde4f4283c3e0b556528f2f9b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c6ad92fdbef31086b72c9be181f66d0e3b3830f")]
 [assembly: System.Reflection.AssemblyProductAttribute("Weiqi.Engine")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Weiqi.Engine")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
