@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Weiqi.Console")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c6ad92fdbef31086b72c9be181f66d0e3b3830f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+efd03b8cbfc48898bc91fc101cf53c7e418b996a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Weiqi.Console")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Weiqi.Console")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
