@@ -1,0 +1,31 @@
+name: CI Checks
+
+on:
+  push:
+    branches: [ "master", "dev" ]
+  pull_request:
+    branches: [ "master", "dev" ]
+  release:
+    types: [ created, published ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '8.0'
+
+      - name: Restore dependencies
+        run: dotnet restore Weiqi.sln
+
+      - name: Build solution, run code analysis and code style check
+        run: |
+          dotnet build Weiqi.sln --no-restore --configuration Release
+          dotnet analyze Weiqi.sln --configuration Release
+          dotnet format Weiqi.sln --verify-no-changes --verbosity diagnostic
