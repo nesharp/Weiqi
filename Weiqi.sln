@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weiqi.Engine", "Weiqi.Engin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weiqi.Console", "Weiqi.Console\Weiqi.Console.csproj", "{2FAD4A57-2F8B-41E5-8A6C-F9422385685A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weiqi.Web", "Weiqi.Web\Weiqi.Web.csproj", "{57BCFC06-3BE2-448E-9645-02FDBC39825B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weiqi.Desktop", "Weiqi.Desktop\Weiqi.Desktop.csproj", "{57BCFC06-3BE2-448E-9645-02FDBC39825B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
