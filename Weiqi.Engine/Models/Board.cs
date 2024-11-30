@@ -25,4 +25,10 @@ public class Board
     {
         return GetStone(position) == Stone.None;
     }
+    
+    public bool PositionIsOnBoard(Position position)
+    {
+        // TODO: Implement
+        throw new NotImplementedException();
+    }
 }
