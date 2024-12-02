@@ -71,12 +71,19 @@ namespace Weiqi.Desktop.Controllers
                 return;
             }
 
-            Stone currentStone = currentPlayer.Stone;
-            board.PlaceStone(new Position(x, y), currentStone);
-
             double xPos = x * cellSize;
             double yPos = y * cellSize;
-
+            try
+            {
+                this.currentPlayer.MakeMove(this.board, new Position(x, y));
+            }
+            catch(Exception e)
+            {
+                Console.Write(e);
+                MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            Stone currentStone = currentPlayer.Stone;
             if (currentStone == Stone.Black)
             {
                 blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
