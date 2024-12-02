@@ -75,7 +75,25 @@ namespace Weiqi.Desktop.Controllers
             double yPos = y * cellSize;
             try
             {
-                this.currentPlayer.MakeMove(this.board, new Position(x, y));
+                var move = this.currentPlayer.MakeMove(this.board, new Position(x, y));
+
+                if (move == null)
+                {
+                    MessageBox.Show("Invalid move!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                
+                Stone currentStone = currentPlayer.Stone;
+                if (currentStone == Stone.Black)
+                {
+                    blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                }
+                else
+                {
+                    whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                }
+
+                currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
             }
             catch(Exception e)
             {
@@ -83,17 +101,7 @@ namespace Weiqi.Desktop.Controllers
                 MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            Stone currentStone = currentPlayer.Stone;
-            if (currentStone == Stone.Black)
-            {
-                blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
-            }
-            else
-            {
-                whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
-            }
 
-            currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
         }
     }
 }

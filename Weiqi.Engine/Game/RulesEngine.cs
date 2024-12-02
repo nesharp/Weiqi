@@ -161,7 +161,7 @@ namespace Weiqi.Engine.Game
                     }
                     visited.Add(pos);
                     
-                    if (board.GetStone(pos) == figure)
+                    if (Equals(board.GetStone(pos), figure))
                     {
                         group.Stones.Add(pos);
                         foreach (var neighbor in GetNeighboringPositions(board, pos))
@@ -172,7 +172,7 @@ namespace Weiqi.Engine.Game
                             }
                         }
                     }
-                    else
+                    else if (Equals(board.GetStone(pos), Stone.None))
                     {
                         group.Liberties.Add(pos);
                     }
@@ -237,7 +237,7 @@ namespace Weiqi.Engine.Game
                 foreach (var p in neighboringPositions)
                 {
                     var neighborStone = board.GetStone(p);
-                    if (!neighborStone.Equals(stone) && !neighborStone.Equals(Stone.None))
+                    if (!Equals(neighborStone, stone) && !Equals(neighborStone, Stone.None))
                     {
                         var neighborGroup = GetGroupAtPosition(board, p);
                         if (!neighboringEnemyGroups.Contains(neighborGroup))
@@ -258,6 +258,7 @@ namespace Weiqi.Engine.Game
                     }
                 }
 
+
                 var newGroup = GetGroupAtPosition(board, position);
                 var liberties = newGroup.Liberties;
 
@@ -271,7 +272,7 @@ namespace Weiqi.Engine.Game
                 board.PlaceStone(new Move(position, Stone.None));
                 throw;
             }
-
+            
             if (simulate)
             {
                 board.PlaceStone(new Move(position, Stone.None));
