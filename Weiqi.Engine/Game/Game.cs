@@ -3,6 +3,7 @@ using Weiqi.Engine.Interfaces;
 using Weiqi.Engine.Models;
 
 namespace Weiqi.Engine.Game;
+//This about removing this class, because idn how to implement this one 
 public class Game
 {
     public Board Board { get; }
@@ -28,7 +29,7 @@ public class Game
     {
         while (!_rulesEngine.IsGameOver(Board))
         {
-            var move = _currentPlayer.MakeMove(Board);
+            var move = _currentPlayer.MakeMove(Board, new Position());
 
             if (move == null)
             {

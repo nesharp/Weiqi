@@ -2,27 +2,27 @@ namespace Weiqi.Engine.Models;
 
 public class Group
 {
-    public List<Position> Stones { get; }
-    public List<Position> Liberties { get; }
+    public HashSet<Position> Stones { get; }
+    public HashSet<Position> Liberties { get; }
     public Stone Stone { get; }
     
     public Group(Stone stone)
     {
         Stone = stone;
-        Stones = new List<Position>();
-        Liberties = new List<Position>();
+        Stones = new HashSet<Position>();
+        Liberties = new HashSet<Position>();
     }
 
     public override bool Equals(object? obj)
     {
-        // TODO: Implement
-        throw new NotImplementedException();
+        return obj is Group group &&
+               EqualityComparer<HashSet<Position>>.Default.Equals(Stones, group.Stones) &&
+               EqualityComparer<HashSet<Position>>.Default.Equals(Liberties, group.Liberties) &&
+               Stone == group.Stone;
     }
 
     public override int GetHashCode()
     {
-        // Need for dictionary key
-        // TODO: Implement
-        throw new NotImplementedException();
+        return HashCode.Combine(Stones, Liberties, Stone);
     }
 }
