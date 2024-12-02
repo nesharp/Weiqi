@@ -144,39 +144,48 @@ namespace Weiqi.Engine.Game
 
         private Group GetGroupAtPosition(Board board, Position position)
         {
-            var stone = board.GetStone(position);
-            if (stone == Stone.None)
+            var figure = board.GetStone(position);
+            if (figure == Stone.None)
             {
-                throw new InvalidOperationException("No stone at the given position");
+                throw new InvalidOperationException("Position is empty");
             }
 
-            var group = new Group(stone);
-            var visited = new HashSet<Position>();
-            var stack = new Stack<Position>();
-            stack.Push(position);
-            visited.Add(position);
-
-            while (stack.Count > 0)
+            Group Bfs(Queue<Position> queue, HashSet<Position> visited, Group group)
             {
-                var current = stack.Pop();
-                group.Stones.Add(current);
-
-                foreach (var neighbor in GetNeighboringPositions(board, current))
+                while (queue.Count > 0)
                 {
-                    var neighborStone = board.GetStone(neighbor);
-                    if (neighborStone == Stone.None)
+                    var pos = queue.Dequeue();
+                    if (visited.Contains(pos))
                     {
-                        group.Liberties.Add(neighbor);
+                        continue;
                     }
-                    else if (neighborStone == stone && !visited.Contains(neighbor))
+                    visited.Add(pos);
+                    
+                    if (board.GetStone(pos) == figure)
                     {
-                        visited.Add(neighbor);
-                        stack.Push(neighbor);
+                        group.Stones.Add(pos);
+                        foreach (var neighbor in GetNeighboringPositions(board, pos))
+                        {
+                            if (!visited.Contains(neighbor))
+                            {
+                                queue.Enqueue(neighbor);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        group.Liberties.Add(pos);
                     }
                 }
-            }
 
-            return group;
+                return group;
+            }
+            
+            var group = new Group(figure);
+            var visited = new HashSet<Position>();
+            var queue = new Queue<Position>();
+            queue.Enqueue(position);
+            return Bfs(queue, visited, group);
         }
 
         private void RemoveGroup(Board board, Group group)
@@ -267,21 +276,6 @@ namespace Weiqi.Engine.Game
             {
                 board.PlaceStone(new Move(position, Stone.None));
             }
-        }
-    }
-
-    // Define the Group class
-    public class Group
-    {
-        public HashSet<Position> Stones { get; }
-        public HashSet<Position> Liberties { get; }
-        public Stone Stone { get; }
-
-        public Group(Stone stone)
-        {
-            Stone = stone;
-            Stones = new HashSet<Position>();
-            Liberties = new HashSet<Position>();
         }
     }
 }
