@@ -71,22 +71,37 @@ namespace Weiqi.Desktop.Controllers
                 return;
             }
 
-            Stone currentStone = currentPlayer.Stone;
-            board.PlaceStone(new Position(x, y), currentStone);
-
             double xPos = x * cellSize;
             double yPos = y * cellSize;
-
-            if (currentStone == Stone.Black)
+            try
             {
-                blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                var move = this.currentPlayer.MakeMove(this.board, new Position(x, y));
+
+                if (move == null)
+                {
+                    MessageBox.Show("Invalid move!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                
+                Stone currentStone = currentPlayer.Stone;
+                if (currentStone == Stone.Black)
+                {
+                    blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                }
+                else
+                {
+                    whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                }
+
+                currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
             }
-            else
+            catch(Exception e)
             {
-                whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                Console.Write(e);
+                MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
         }
     }
 }

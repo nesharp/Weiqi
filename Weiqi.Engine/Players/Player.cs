@@ -12,5 +12,5 @@ public abstract class Player : IPlayer
       Stone = stone;
    }
 
-   public abstract Move MakeMove(Board board);
+   public abstract Move MakeMove(Board board, Position position);
 }

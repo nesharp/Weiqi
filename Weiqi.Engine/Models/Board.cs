@@ -16,9 +16,9 @@ public class Board
         return _grid[position.X, position.Y];
     }
 
-    public void PlaceStone(Position position, Stone stone)
+    public void PlaceStone(Move move)
     {
-        _grid[position.X, position.Y] = stone;
+        _grid[move.Position.X, move.Position.Y] = move.Stone;
     }
 
     public bool IsPositionEmpty(Position position)
@@ -28,7 +28,7 @@ public class Board
     
     public bool PositionIsOnBoard(Position position)
     {
-        // TODO: Implement
-        throw new NotImplementedException();
+        return position.X >= 0 && position.X < Size && position.Y >= 0 && position.Y < Size;
+
     }
 }
