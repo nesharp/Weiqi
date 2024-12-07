@@ -4,10 +4,10 @@ namespace Weiqi.Engine.Events;
 
 public class MoveMadeEventArgs : EventArgs
 {
-    public Move Move { get; }
+    public PutCell PutCell { get; }
 
-    public MoveMadeEventArgs(Move move)
+    public MoveMadeEventArgs(PutCell putCell)
     {
-        Move = move;
+        PutCell = putCell;
     }
 }

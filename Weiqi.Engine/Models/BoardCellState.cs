@@ -1,6 +1,6 @@
 namespace Weiqi.Engine.Models;
 
-public enum Stone
+public enum BoardCellState
 {
     None,
     Black,

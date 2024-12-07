@@ -29,7 +29,7 @@ public class Game
     {
         while (!_rulesEngine.IsGameOver(Board))
         {
-            var move = _currentPlayer.MakeMove(Board, new Position());
+            var move = _currentPlayer.MakePut(Board, new Position());
 
             if (move == null)
             {

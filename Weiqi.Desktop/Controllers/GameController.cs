@@ -37,13 +37,13 @@ namespace Weiqi.Desktop.Controllers
             this.secondPlayer = secondPlayer;
             this.currentPlayer = firstPlayer;
 
-            blackStoneRepresentation = new CanvasStone(Stone.Black);
-            whiteStoneRepresentation = new CanvasStone(Stone.White);
+            blackStoneRepresentation = new CanvasStone(BoardCellState.Black);
+            whiteStoneRepresentation = new CanvasStone(BoardCellState.White);
         }
 
         /// <summary>
         /// Handles the user's click on the board. Determines the cell where the click occurred 
-        /// and attempts to place a stone at that location.
+        /// and attempts to place a boardCellState at that location.
         /// </summary>
         /// <param name="position">The coordinates of the mouse click relative to the canvas.</param>
         public void HandleClick(Point position)
@@ -58,14 +58,14 @@ namespace Weiqi.Desktop.Controllers
         }
 
         /// <summary>
-        /// Places a stone at the specified board cell if the cell is not already occupied.
+        /// Places a boardCellState at the specified board cell if the cell is not already occupied.
         /// Updates the game board and visual representation.
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
         /// <param name="y">The y-coordinate of the cell.</param>
         private void PlaceStone(int x, int y)
         {
-            if (board.GetStone(new Position(x, y)) != Stone.None)
+            if (board.GetCellState(new Position(x, y)) != BoardCellState.None)
             {
                 MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -75,16 +75,16 @@ namespace Weiqi.Desktop.Controllers
             double yPos = y * cellSize;
             try
             {
-                var move = this.currentPlayer.MakeMove(this.board, new Position(x, y));
+                var move = this.currentPlayer.MakePut(this.board, new Position(x, y));
 
                 if (move == null)
                 {
-                    MessageBox.Show("Invalid move!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Invalid putCell!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 
-                Stone currentStone = currentPlayer.Stone;
-                if (currentStone == Stone.Black)
+                BoardCellState currentBoardCellState = currentPlayer.BoardCellState;
+                if (currentBoardCellState == BoardCellState.Black)
                 {
                     blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
                 }

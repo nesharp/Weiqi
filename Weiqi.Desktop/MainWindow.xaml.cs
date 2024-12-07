@@ -29,8 +29,8 @@ namespace WeiqiApp
             boardDrawer.DrawBoard();
 
             Board board = new Board(boardSize);
-            IPlayer firstPlayer = new HumanPlayer(Stone.Black);
-            IPlayer secondPlayer = new HumanPlayer(Stone.White);
+            IPlayer firstPlayer = new HumanPlayer(BoardCellState.Black);
+            IPlayer secondPlayer = new HumanPlayer(BoardCellState.White);
             this.gameController = new GameController(BoardCanvas, board, cellSize, firstPlayer, secondPlayer);
         }
 

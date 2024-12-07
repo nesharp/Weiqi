@@ -4,11 +4,11 @@ public class Group
 {
     public HashSet<Position> Stones { get; }
     public HashSet<Position> Liberties { get; }
-    public Stone Stone { get; }
+    public BoardCellState BoardCellState { get; }
     
-    public Group(Stone stone)
+    public Group(BoardCellState boardCellState)
     {
-        Stone = stone;
+        BoardCellState = boardCellState;
         Stones = new HashSet<Position>();
         Liberties = new HashSet<Position>();
     }
@@ -18,11 +18,11 @@ public class Group
         return obj is Group group &&
                EqualityComparer<HashSet<Position>>.Default.Equals(Stones, group.Stones) &&
                EqualityComparer<HashSet<Position>>.Default.Equals(Liberties, group.Liberties) &&
-               Stone == group.Stone;
+               BoardCellState == group.BoardCellState;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Stones, Liberties, Stone);
+        return HashCode.Combine(Stones, Liberties, BoardCellState);
     }
 }

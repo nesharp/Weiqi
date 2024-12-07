@@ -8,11 +8,11 @@ namespace Weiqi.Engine.Game
 {
     public class RulesEngine : IRulesEngine
     {
-        public bool IsMoveLegal(Board board, Move move)
+        public bool IsMoveLegal(Board board, PutCell putCell)
         {   
             try
             {
-                PlaceStone(board, move.Position, move.Stone, true);
+                PlaceStone(board, putCell.Position, putCell.BoardCellState, true);
                 return true;
             }
             catch (InvalidOperationException)
@@ -22,35 +22,35 @@ namespace Weiqi.Engine.Game
         }
 
         /// <summary>
-        /// Apply a move to the board
+        /// Apply a putCell to the board
         /// </summary>
-        /// <param name="board">Board to apply the move to</param>
-        /// <param name="move">Move to apply</param>
-        /// <exception cref="InvalidOperationException">Thrown if the move is not legal</exception>
-        public void ApplyMove(Board board, Move move)
+        /// <param name="board">Board to apply the putCell to</param>
+        /// <param name="putCell">PutCell to apply</param>
+        /// <exception cref="InvalidOperationException">Thrown if the putCell is not legal</exception>
+        public void ApplyMove(Board board, PutCell putCell)
         {
-            if (!IsMoveLegal(board, move))
+            if (!IsMoveLegal(board, putCell))
             {
-                throw new InvalidOperationException("Move is not legal");
+                throw new InvalidOperationException("PutCell is not legal");
             }
-            PlaceStone(board, move.Position, move.Stone);
+            PlaceStone(board, putCell.Position, putCell.BoardCellState);
         }
 
         public bool IsGameOver(Board board)
         {
             var territories = FindTerritories(board);
-            if (territories.TryGetValue(Stone.None, out var emptyTerritory))
+            if (territories.TryGetValue(BoardCellState.None, out var emptyTerritory))
             {
                 return emptyTerritory.Count == 0;
             }
             return false;
         }
 
-        public int CalculateScore(Board board, Stone stone)
+        public int CalculateScore(Board board, BoardCellState boardCellState)
         {
             var territories = FindTerritories(board);
 
-            if (territories.TryGetValue(stone, out var stoneTerritory))
+            if (territories.TryGetValue(boardCellState, out var stoneTerritory))
             {
                 return stoneTerritory.Count;
             }
@@ -58,13 +58,13 @@ namespace Weiqi.Engine.Game
             return 0;
         }
 
-        private Dictionary<Stone, HashSet<Position>> FindTerritories(Board board)
+        private Dictionary<BoardCellState, HashSet<Position>> FindTerritories(Board board)
         {
-            var territories = new Dictionary<Stone, HashSet<Position>>()
+            var territories = new Dictionary<BoardCellState, HashSet<Position>>()
             {
-                { Stone.None, new HashSet<Position>() },
-                { Stone.Black, new HashSet<Position>() },
-                { Stone.White, new HashSet<Position>() }
+                { BoardCellState.None, new HashSet<Position>() },
+                { BoardCellState.Black, new HashSet<Position>() },
+                { BoardCellState.White, new HashSet<Position>() }
             };
 
             var visited = new HashSet<Position>();
@@ -78,8 +78,8 @@ namespace Weiqi.Engine.Game
                         continue;
                     }
 
-                    var stone = board.GetStone(position);
-                    if (stone != Stone.None)
+                    var stone = board.GetCellState(position);
+                    if (stone != BoardCellState.None)
                     {
                         visited.Add(position);
                         continue;
@@ -87,7 +87,7 @@ namespace Weiqi.Engine.Game
 
                     // Empty position not visited yet
                     var territoryPositions = new HashSet<Position>();
-                    var borderingStones = new HashSet<Stone>();
+                    var borderingStones = new HashSet<BoardCellState>();
 
                     var stack = new Stack<Position>();
                     stack.Push(position);
@@ -100,8 +100,8 @@ namespace Weiqi.Engine.Game
 
                         foreach (var neighbor in GetNeighboringPositions(board, current))
                         {
-                            var neighborStone = board.GetStone(neighbor);
-                            if (neighborStone == Stone.None)
+                            var neighborStone = board.GetCellState(neighbor);
+                            if (neighborStone == BoardCellState.None)
                             {
                                 if (!visited.Contains(neighbor))
                                 {
@@ -117,14 +117,14 @@ namespace Weiqi.Engine.Game
                     }
 
                     // Determine owner of the territory
-                    Stone owner;
+                    BoardCellState owner;
                     if (borderingStones.Count == 1)
                     {
                         owner = borderingStones.First();
                     }
                     else
                     {
-                        owner = Stone.None; // Neutral or disputed territory
+                        owner = BoardCellState.None; // Neutral or disputed territory
                     }
 
                     if (!territories.ContainsKey(owner))
@@ -144,8 +144,8 @@ namespace Weiqi.Engine.Game
 
         private Group GetGroupAtPosition(Board board, Position position)
         {
-            var figure = board.GetStone(position);
-            if (figure == Stone.None)
+            var figure = board.GetCellState(position);
+            if (figure == BoardCellState.None)
             {
                 throw new InvalidOperationException("Position is empty");
             }
@@ -161,7 +161,7 @@ namespace Weiqi.Engine.Game
                     }
                     visited.Add(pos);
                     
-                    if (Equals(board.GetStone(pos), figure))
+                    if (Equals(board.GetCellState(pos), figure))
                     {
                         group.Stones.Add(pos);
                         foreach (var neighbor in GetNeighboringPositions(board, pos))
@@ -172,7 +172,7 @@ namespace Weiqi.Engine.Game
                             }
                         }
                     }
-                    else if (Equals(board.GetStone(pos), Stone.None))
+                    else if (Equals(board.GetCellState(pos), BoardCellState.None))
                     {
                         group.Liberties.Add(pos);
                     }
@@ -192,7 +192,7 @@ namespace Weiqi.Engine.Game
         {
             foreach (var position in group.Stones)
             {
-                board.PlaceStone(new Move(position, Stone.None));
+                board.PlaceStone(new PutCell(position, BoardCellState.None));
             }
         }
 
@@ -217,7 +217,7 @@ namespace Weiqi.Engine.Game
             return result;
         }
 
-        private void PlaceStone(Board board, Position position, Stone stone, bool simulate = false)
+        private void PlaceStone(Board board, Position position, BoardCellState boardCellState, bool simulate = false)
         {
             if (!board.PositionIsOnBoard(position))
             {
@@ -228,7 +228,7 @@ namespace Weiqi.Engine.Game
                 throw new InvalidOperationException("Position is not empty");
             }
 
-            board.PlaceStone(new Move(position, stone));
+            board.PlaceStone(new PutCell(position, boardCellState));
 
             try
             {
@@ -236,8 +236,8 @@ namespace Weiqi.Engine.Game
                 var neighboringPositions = GetNeighboringPositions(board, position);
                 foreach (var p in neighboringPositions)
                 {
-                    var neighborStone = board.GetStone(p);
-                    if (!Equals(neighborStone, stone) && !Equals(neighborStone, Stone.None))
+                    var neighborStone = board.GetCellState(p);
+                    if (!Equals(neighborStone, boardCellState) && !Equals(neighborStone, BoardCellState.None))
                     {
                         var neighborGroup = GetGroupAtPosition(board, p);
                         if (!neighboringEnemyGroups.Contains(neighborGroup))
@@ -264,18 +264,18 @@ namespace Weiqi.Engine.Game
 
                 if (liberties.Count == 0)
                 {
-                    throw new InvalidOperationException("Move is suicidal");
+                    throw new InvalidOperationException("PutCell is suicidal");
                 }
             }
             catch (InvalidOperationException)
             {
-                board.PlaceStone(new Move(position, Stone.None));
+                board.PlaceStone(new PutCell(position, BoardCellState.None));
                 throw;
             }
             
             if (simulate)
             {
-                board.PlaceStone(new Move(position, Stone.None));
+                board.PlaceStone(new PutCell(position, BoardCellState.None));
             }
         }
     }
