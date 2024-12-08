@@ -144,8 +144,8 @@ namespace Weiqi.Engine.Game
 
         private Group GetGroupAtPosition(Board board, Position position)
         {
-            var figure = board.GetCellState(position);
-            if (figure == BoardCellState.None)
+            var cellState = board.GetCellState(position);
+            if (cellState == BoardCellState.None)
             {
                 throw new InvalidOperationException("Position is empty");
             }
@@ -161,7 +161,7 @@ namespace Weiqi.Engine.Game
                     }
                     visited.Add(pos);
                     
-                    if (Equals(board.GetCellState(pos), figure))
+                    if (Equals(board.GetCellState(pos), cellState))
                     {
                         group.Stones.Add(pos);
                         foreach (var neighbor in GetNeighboringPositions(board, pos))
@@ -181,7 +181,7 @@ namespace Weiqi.Engine.Game
                 return group;
             }
             
-            var group = new Group(figure);
+            var group = new Group(cellState);
             var visited = new HashSet<Position>();
             var queue = new Queue<Position>();
             queue.Enqueue(position);
