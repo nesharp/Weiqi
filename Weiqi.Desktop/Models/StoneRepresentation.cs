@@ -5,11 +5,11 @@ namespace Weiqi.Desktop.Models
 {
     public abstract class StoneRepresentation
     {
-        protected Stone stone;
+        protected BoardCellState BoardCellState;
 
-        protected StoneRepresentation(Stone stone)
+        protected StoneRepresentation(BoardCellState boardCellState)
         {
-            this.stone = stone;
+            this.BoardCellState = boardCellState;
         }
 
         public abstract void Draw(Canvas canvas, double x, double y, double size);

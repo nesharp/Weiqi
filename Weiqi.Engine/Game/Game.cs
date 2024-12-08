@@ -11,7 +11,7 @@ public class Game
     private readonly IPlayer _playerWhite;
     private readonly IRulesEngine _rulesEngine;
 
-    public event EventHandler<MoveMadeEventArgs> MoveMade;
+    public event EventHandler<PutMadeEventArgs> PutMade;
     public event EventHandler<GameEndedEventArgs> GameEnded;
 
     private IPlayer _currentPlayer;
@@ -29,19 +29,19 @@ public class Game
     {
         while (!_rulesEngine.IsGameOver(Board))
         {
-            var move = _currentPlayer.MakeMove(Board, new Position());
+            var put = _currentPlayer.MakePut(Board, new Position());
 
-            if (move == null)
+            if (put == null)
             {
                 // Гравець пасує або здається
                 OnGameEnded(new GameEndedEventArgs());
                 return;
             }
 
-            if (_rulesEngine.IsMoveLegal(Board, move))
+            if (_rulesEngine.IsPutLegal(Board, put))
             {
-                _rulesEngine.ApplyMove(Board, move);
-                OnMoveMade(new MoveMadeEventArgs(move));
+                _rulesEngine.ApplyPut(Board, put);
+                OnPutMade(new PutMadeEventArgs(put));
 
                 // Зміна гравця
                 _currentPlayer = _currentPlayer == _playerBlack ? _playerWhite : _playerBlack;
@@ -55,9 +55,9 @@ public class Game
         OnGameEnded(new GameEndedEventArgs());
     }
 
-    protected virtual void OnMoveMade(MoveMadeEventArgs e)
+    protected virtual void OnPutMade(PutMadeEventArgs e)
     {
-        MoveMade?.Invoke(this, e);
+        PutMade?.Invoke(this, e);
     }
 
     protected virtual void OnGameEnded(GameEndedEventArgs e)

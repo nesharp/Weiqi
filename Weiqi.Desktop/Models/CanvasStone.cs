@@ -7,7 +7,7 @@ namespace Weiqi.Desktop.Models
 {
     public class CanvasStone : StoneRepresentation
     {
-        public CanvasStone(Stone stone) : base(stone) { }
+        public CanvasStone(BoardCellState boardCellState) : base(boardCellState) { }
 
         public override void Draw(Canvas canvas, double x, double y, double size)
         {
@@ -15,7 +15,7 @@ namespace Weiqi.Desktop.Models
             {
                 Width = size - 4,
                 Height = size - 4,
-                Fill = stone == Stone.Black ? Brushes.Black : Brushes.White,
+                Fill = BoardCellState == BoardCellState.Black ? Brushes.Black : Brushes.White,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 VerticalAlignment = System.Windows.VerticalAlignment.Center
             };

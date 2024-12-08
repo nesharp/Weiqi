@@ -5,8 +5,8 @@ namespace Weiqi.Engine.Interfaces;
 
 public interface IRulesEngine
 {
-    bool IsMoveLegal(Board board, Move move);
-    void ApplyMove(Board board, Move move);
+    bool IsPutLegal(Board board, Put put);
+    void ApplyPut(Board board, Put put);
     bool IsGameOver(Board board);
-    int CalculateScore(Board board, Stone stone);
+    int CalculateScore(Board board, BoardCellState boardCellState);
 }

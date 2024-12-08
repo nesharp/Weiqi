@@ -5,19 +5,19 @@ namespace Weiqi.Engine.Players;
 
 public class HumanPlayer:Player
 {
-    public HumanPlayer(Stone stone) : base(stone)
+    public HumanPlayer(BoardCellState boardCellState) : base(boardCellState)
     {
     }
-    public override Move MakeMove(Board board, Position position)
+    public override Put MakePut(Board board, Position position)
     {
-        Move move = new Move(position, this.Stone);
+        Put put = new Put(position, this.BoardCellState);
         RulesEngine rulesEngine = new RulesEngine();
         
-        if (!rulesEngine.IsMoveLegal(board, move))
+        if (!rulesEngine.IsPutLegal(board, put))
         {
             return null;
         }
-        board.PlaceStone(move);
-        return new Move(position, this.Stone);
+        board.SetCellState(put);
+        return new Put(position, this.BoardCellState);
     }
 }
