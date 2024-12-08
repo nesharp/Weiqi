@@ -12,7 +12,7 @@ namespace Weiqi.Engine.Game
         {   
             try
             {
-                PlaceStone(board, put.Position, put.BoardCellState, true);
+                ApplyPutOnBoard(board, put.Position, put.BoardCellState, true);
                 return true;
             }
             catch (InvalidOperationException)
@@ -33,7 +33,7 @@ namespace Weiqi.Engine.Game
             {
                 throw new InvalidOperationException("Put is not legal");
             }
-            PlaceStone(board, put.Position, put.BoardCellState);
+            ApplyPutOnBoard(board, put.Position, put.BoardCellState);
         }
 
         public bool IsGameOver(Board board)
@@ -87,7 +87,7 @@ namespace Weiqi.Engine.Game
 
                     // Empty position not visited yet
                     var territoryPositions = new HashSet<Position>();
-                    var borderingStones = new HashSet<BoardCellState>();
+                    var borderingCellStates = new HashSet<BoardCellState>();
 
                     var stack = new Stack<Position>();
                     stack.Push(position);
@@ -111,16 +111,16 @@ namespace Weiqi.Engine.Game
                             }
                             else
                             {
-                                borderingStones.Add(neighborStone);
+                                borderingCellStates.Add(neighborStone);
                             }
                         }
                     }
 
                     // Determine owner of the territory
                     BoardCellState owner;
-                    if (borderingStones.Count == 1)
+                    if (borderingCellStates.Count == 1)
                     {
-                        owner = borderingStones.First();
+                        owner = borderingCellStates.First();
                     }
                     else
                     {
@@ -192,7 +192,7 @@ namespace Weiqi.Engine.Game
         {
             foreach (var position in group.Stones)
             {
-                board.PlaceStone(new Put(position, BoardCellState.None));
+                board.SetCellState(new Put(position, BoardCellState.None));
             }
         }
 
@@ -217,7 +217,7 @@ namespace Weiqi.Engine.Game
             return result;
         }
 
-        private void PlaceStone(Board board, Position position, BoardCellState boardCellState, bool simulate = false)
+        private void ApplyPutOnBoard(Board board, Position position, BoardCellState boardCellState, bool simulate = false)
         {
             if (!board.PositionIsOnBoard(position))
             {
@@ -228,7 +228,7 @@ namespace Weiqi.Engine.Game
                 throw new InvalidOperationException("Position is not empty");
             }
 
-            board.PlaceStone(new Put(position, boardCellState));
+            board.SetCellState(new Put(position, boardCellState));
 
             try
             {
@@ -236,8 +236,8 @@ namespace Weiqi.Engine.Game
                 var neighboringPositions = GetNeighboringPositions(board, position);
                 foreach (var p in neighboringPositions)
                 {
-                    var neighborStone = board.GetCellState(p);
-                    if (!Equals(neighborStone, boardCellState) && !Equals(neighborStone, BoardCellState.None))
+                    var neighborCellState = board.GetCellState(p);
+                    if (!Equals(neighborCellState, boardCellState) && !Equals(neighborCellState, BoardCellState.None))
                     {
                         var neighborGroup = GetGroupAtPosition(board, p);
                         if (!neighboringEnemyGroups.Contains(neighborGroup))
@@ -269,13 +269,13 @@ namespace Weiqi.Engine.Game
             }
             catch (InvalidOperationException)
             {
-                board.PlaceStone(new Put(position, BoardCellState.None));
+                board.SetCellState(new Put(position, BoardCellState.None));
                 throw;
             }
             
             if (simulate)
             {
-                board.PlaceStone(new Put(position, BoardCellState.None));
+                board.SetCellState(new Put(position, BoardCellState.None));
             }
         }
     }

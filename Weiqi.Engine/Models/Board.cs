@@ -16,7 +16,7 @@ public class Board
         return _grid[position.X, position.Y];
     }
 
-    public void PlaceStone(Put put)
+    public void SetCellState(Put put)
     {
         _grid[put.Position.X, put.Position.Y] = put.BoardCellState;
     }
