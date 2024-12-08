@@ -75,9 +75,9 @@ namespace Weiqi.Desktop.Controllers
             double yPos = y * cellSize;
             try
             {
-                var move = this.currentPlayer.MakePut(this.board, new Position(x, y));
+                var put = this.currentPlayer.MakePut(this.board, new Position(x, y));
 
-                if (move == null)
+                if (put == null)
                 {
                     MessageBox.Show("Invalid putCell!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;

@@ -12,5 +12,5 @@ public abstract class Player : IPlayer
       BoardCellState = boardCellState;
    }
 
-   public abstract PutCell MakePut(Board board, Position position);
+   public abstract Put MakePut(Board board, Position position);
 }

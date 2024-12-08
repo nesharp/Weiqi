@@ -2,12 +2,12 @@ using Weiqi.Engine.Models;
 
 namespace Weiqi.Engine.Events;
 
-public class MoveMadeEventArgs : EventArgs
+public class PutMadeEventArgs : EventArgs
 {
-    public PutCell PutCell { get; }
+    public Put Put { get; }
 
-    public MoveMadeEventArgs(PutCell putCell)
+    public PutMadeEventArgs(Put put)
     {
-        PutCell = putCell;
+        Put = put;
     }
 }

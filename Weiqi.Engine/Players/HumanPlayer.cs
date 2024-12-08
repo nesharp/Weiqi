@@ -8,16 +8,16 @@ public class HumanPlayer:Player
     public HumanPlayer(BoardCellState boardCellState) : base(boardCellState)
     {
     }
-    public override PutCell MakePut(Board board, Position position)
+    public override Put MakePut(Board board, Position position)
     {
-        PutCell putCell = new PutCell(position, this.BoardCellState);
+        Put put = new Put(position, this.BoardCellState);
         RulesEngine rulesEngine = new RulesEngine();
         
-        if (!rulesEngine.IsMoveLegal(board, putCell))
+        if (!rulesEngine.IsPutLegal(board, put))
         {
             return null;
         }
-        board.PlaceStone(putCell);
-        return new PutCell(position, this.BoardCellState);
+        board.PlaceStone(put);
+        return new Put(position, this.BoardCellState);
     }
 }

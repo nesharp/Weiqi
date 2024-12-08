@@ -8,11 +8,11 @@ namespace Weiqi.Engine.Game
 {
     public class RulesEngine : IRulesEngine
     {
-        public bool IsMoveLegal(Board board, PutCell putCell)
+        public bool IsPutLegal(Board board, Put put)
         {   
             try
             {
-                PlaceStone(board, putCell.Position, putCell.BoardCellState, true);
+                PlaceStone(board, put.Position, put.BoardCellState, true);
                 return true;
             }
             catch (InvalidOperationException)
@@ -22,18 +22,18 @@ namespace Weiqi.Engine.Game
         }
 
         /// <summary>
-        /// Apply a putCell to the board
+        /// Apply a put to the board
         /// </summary>
-        /// <param name="board">Board to apply the putCell to</param>
-        /// <param name="putCell">PutCell to apply</param>
-        /// <exception cref="InvalidOperationException">Thrown if the putCell is not legal</exception>
-        public void ApplyMove(Board board, PutCell putCell)
+        /// <param name="board">Board to apply the put to</param>
+        /// <param name="put">Put to apply</param>
+        /// <exception cref="InvalidOperationException">Thrown if the put is not legal</exception>
+        public void ApplyPut(Board board, Put put)
         {
-            if (!IsMoveLegal(board, putCell))
+            if (!IsPutLegal(board, put))
             {
-                throw new InvalidOperationException("PutCell is not legal");
+                throw new InvalidOperationException("Put is not legal");
             }
-            PlaceStone(board, putCell.Position, putCell.BoardCellState);
+            PlaceStone(board, put.Position, put.BoardCellState);
         }
 
         public bool IsGameOver(Board board)
@@ -192,7 +192,7 @@ namespace Weiqi.Engine.Game
         {
             foreach (var position in group.Stones)
             {
-                board.PlaceStone(new PutCell(position, BoardCellState.None));
+                board.PlaceStone(new Put(position, BoardCellState.None));
             }
         }
 
@@ -228,7 +228,7 @@ namespace Weiqi.Engine.Game
                 throw new InvalidOperationException("Position is not empty");
             }
 
-            board.PlaceStone(new PutCell(position, boardCellState));
+            board.PlaceStone(new Put(position, boardCellState));
 
             try
             {
@@ -264,18 +264,18 @@ namespace Weiqi.Engine.Game
 
                 if (liberties.Count == 0)
                 {
-                    throw new InvalidOperationException("PutCell is suicidal");
+                    throw new InvalidOperationException("Put is suicidal");
                 }
             }
             catch (InvalidOperationException)
             {
-                board.PlaceStone(new PutCell(position, BoardCellState.None));
+                board.PlaceStone(new Put(position, BoardCellState.None));
                 throw;
             }
             
             if (simulate)
             {
-                board.PlaceStone(new PutCell(position, BoardCellState.None));
+                board.PlaceStone(new Put(position, BoardCellState.None));
             }
         }
     }

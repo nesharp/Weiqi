@@ -16,9 +16,9 @@ public class Board
         return _grid[position.X, position.Y];
     }
 
-    public void PlaceStone(PutCell putCell)
+    public void PlaceStone(Put put)
     {
-        _grid[putCell.Position.X, putCell.Position.Y] = putCell.BoardCellState;
+        _grid[put.Position.X, put.Position.Y] = put.BoardCellState;
     }
 
     public bool IsPositionEmpty(Position position)
