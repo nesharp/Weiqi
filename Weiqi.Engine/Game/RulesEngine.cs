@@ -10,11 +10,34 @@ namespace Weiqi.Engine.Game
     {
         public bool IsPutLegal(Board board, Put put)
         {   
+            if (!IsValidPosition(board, put.Position))
+            {
+                return false;
+            }
+            
+            // Copy the board for simulation
+            var boardCopy = CopyBoard(board);
+
             try
             {
-                ApplyPutOnBoard(board, put.Position, put.BoardCellState, true);
+                var neighboringEnemyGroups = GetNeighboringEnemyGroups(board, put.Position);
+                foreach (var group in neighboringEnemyGroups)
+                {
+                    if (group.Liberties.Count == 0)
+                    {
+                        RemoveGroup(boardCopy, group);
+                    }
+                }
+            
+                var newGroup = GetGroupAtPosition(board, put.Position);
+                var liberties = newGroup.Liberties;
+                if (liberties.Count == 0)
+                {
+                    return false;
+                }
+            
                 return true;
-            }
+            } 
             catch (InvalidOperationException)
             {
                 return false;
@@ -33,7 +56,17 @@ namespace Weiqi.Engine.Game
             {
                 throw new InvalidOperationException("Put is not legal");
             }
-            ApplyPutOnBoard(board, put.Position, put.BoardCellState);
+            
+            board.SetCellState(put);
+            
+            var neighboringEnemyGroups = GetNeighboringEnemyGroups(board, put.Position);
+            foreach (var group in neighboringEnemyGroups)
+            {
+                if (group.Liberties.Count == 0)
+                {
+                    RemoveGroup(board, group);
+                }
+            }
         }
 
         public bool IsGameOver(Board board)
@@ -56,6 +89,21 @@ namespace Weiqi.Engine.Game
             }
 
             return 0;
+        }
+        
+        private Board CopyBoard(Board board)
+        {
+            var boardCopy = new Board(board.Size);
+            for (int x = 0; x < board.Size; x++)
+            {
+                for (int y = 0; y < board.Size; y++)
+                {
+                    var position = new Position(x, y);
+                    boardCopy.SetCellState(new Put(position, board.GetCellState(position)));
+                }
+            }
+
+            return boardCopy;
         }
 
         private Dictionary<BoardCellState, HashSet<Position>> FindTerritories(Board board)
@@ -216,67 +264,39 @@ namespace Weiqi.Engine.Game
             }
             return result;
         }
+        
+        private List<Group> GetNeighboringEnemyGroups(Board board, Position position)
+        {
+            var result = new List<Group>();
+            var neighboringPositions = GetNeighboringPositions(board, position);
+            foreach (var p in neighboringPositions)
+            {
+                var neighborCellState = board.GetCellState(p);
+                if (!Equals(neighborCellState, board.GetCellState(position)) && !Equals(neighborCellState, BoardCellState.None))
+                {
+                    var neighborGroup = GetGroupAtPosition(board, p);
+                    if (!result.Contains(neighborGroup))
+                    {
+                        result.Add(neighborGroup);
+                    }
+                }
+            }
 
-        private void ApplyPutOnBoard(Board board, Position position, BoardCellState boardCellState, bool simulate = false)
+            return result;
+        }
+        
+        private static bool IsValidPosition(Board board, Position position)
         {
             if (!board.PositionIsOnBoard(position))
             {
-                throw new InvalidOperationException("Position is not on board");
+                return false;
             }
             if (!board.IsPositionEmpty(position))
             {
-                throw new InvalidOperationException("Position is not empty");
-            }
-
-            board.SetCellState(new Put(position, boardCellState));
-
-            try
-            {
-                var neighboringEnemyGroups = new List<Group>();
-                var neighboringPositions = GetNeighboringPositions(board, position);
-                foreach (var p in neighboringPositions)
-                {
-                    var neighborCellState = board.GetCellState(p);
-                    if (!Equals(neighborCellState, boardCellState) && !Equals(neighborCellState, BoardCellState.None))
-                    {
-                        var neighborGroup = GetGroupAtPosition(board, p);
-                        if (!neighboringEnemyGroups.Contains(neighborGroup))
-                        {
-                            neighboringEnemyGroups.Add(neighborGroup);
-                        }
-                    }
-                }
-
-                if (!simulate)
-                {
-                    foreach (var group in neighboringEnemyGroups)
-                    {
-                        if (group.Liberties.Count == 0)
-                        {
-                            RemoveGroup(board, group);
-                        }
-                    }
-                }
-
-
-                var newGroup = GetGroupAtPosition(board, position);
-                var liberties = newGroup.Liberties;
-
-                if (liberties.Count == 0)
-                {
-                    throw new InvalidOperationException("Put is suicidal");
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                board.SetCellState(new Put(position, BoardCellState.None));
-                throw;
+                return false;
             }
             
-            if (simulate)
-            {
-                board.SetCellState(new Put(position, BoardCellState.None));
-            }
+            return true;
         }
     }
 }

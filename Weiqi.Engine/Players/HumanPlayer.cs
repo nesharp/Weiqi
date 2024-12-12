@@ -17,7 +17,7 @@ public class HumanPlayer:Player
         {
             return null;
         }
-        board.SetCellState(put);
-        return new Put(position, this.BoardCellState);
+        rulesEngine.ApplyPut(board, put);
+        return put;
     }
 }
