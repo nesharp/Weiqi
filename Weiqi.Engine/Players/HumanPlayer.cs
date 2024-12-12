@@ -1,15 +1,23 @@
+using Weiqi.Engine.Game;
 using Weiqi.Engine.Models;
 
 namespace Weiqi.Engine.Players;
 
 public class HumanPlayer:Player
 {
-    public HumanPlayer(Stone stone) : base(stone)
+    public HumanPlayer(BoardCellState boardCellState) : base(boardCellState)
     {
     }
-    //TODO:todo
-    public override Move MakeMove(Board board)
+    public override Put MakePut(Board board, Position position)
     {
-        return null;
+        Put put = new Put(position, this.BoardCellState);
+        RulesEngine rulesEngine = new RulesEngine();
+        
+        if (!rulesEngine.IsPutLegal(board, put))
+        {
+            return null;
+        }
+        rulesEngine.ApplyPut(board, put);
+        return put;
     }
 }

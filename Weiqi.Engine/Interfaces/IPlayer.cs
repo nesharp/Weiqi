@@ -4,6 +4,6 @@ namespace Weiqi.Engine.Interfaces;
 
 public interface IPlayer
 {
-    Stone Stone { get; }
-    Move MakeMove(Board board);
+    BoardCellState BoardCellState { get; }
+    Put MakePut(Board board, Position position);
 }
