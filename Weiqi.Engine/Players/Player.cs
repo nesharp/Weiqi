@@ -5,12 +5,12 @@ namespace Weiqi.Engine.Players;
 
 public abstract class Player : IPlayer
 {
-   public BoardCellState BoardCellState { get; }
+    public BoardCellState BoardCellState { get; }
    
-   protected Player(BoardCellState boardCellState)
-   {
-      BoardCellState = boardCellState;
-   }
+    protected Player(BoardCellState boardCellState)
+    {
+        BoardCellState = boardCellState;
+    }
 
-   public abstract Put MakePut(Board board, Position position);
+    public abstract Put MakePut(Board board, IRulesEngine rulesEngine, Position position);
 }

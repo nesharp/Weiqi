@@ -5,12 +5,13 @@ using Weiqi.Engine.Models;
 using Weiqi.Engine.Players;
 using Weiqi.Desktop.Controllers;
 using Weiqi.Desktop.Models;
+using Weiqi.Engine.Game;
 
 namespace WeiqiApp
 {
     public partial class MainWindow : Window
     {
-        private int boardSize = 19;
+        private int boardSize = 6;
         private double canvasSize = 600;
         private double cellSize;
         private GameController gameController;
@@ -29,9 +30,10 @@ namespace WeiqiApp
             boardDrawer.DrawBoard();
 
             Board board = new Board(boardSize);
+            RulesEngine rulesEngine = new RulesEngine();
             IPlayer firstPlayer = new HumanPlayer(BoardCellState.Black);
             IPlayer secondPlayer = new HumanPlayer(BoardCellState.White);
-            this.gameController = new GameController(BoardCanvas, board, cellSize, firstPlayer, secondPlayer);
+            this.gameController = new GameController(BoardCanvas, board, cellSize, firstPlayer, secondPlayer, boardDrawer, rulesEngine);
         }
 
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

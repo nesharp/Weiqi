@@ -20,8 +20,14 @@ namespace Weiqi.Desktop.Models
 
         public void DrawBoard()
         {
+            ClearBoard();
             DrawLines();
             DrawHoshiPoints();
+        }
+        
+        private void ClearBoard()
+        {
+            canvas.Children.Clear();
         }
 
         private void DrawLines()
