@@ -18,6 +18,8 @@ namespace Weiqi.Desktop.Controllers
         private readonly double cellSize;
         private readonly IPlayer firstPlayer;
         private readonly IPlayer secondPlayer;
+        private readonly BoardDrawer boardDrawer;
+        private readonly IRulesEngine rulesEngine;
         private IPlayer currentPlayer;
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace Weiqi.Desktop.Controllers
         /// <param name="cellSize">The size of a single cell on the board in pixels.</param>
         /// <param name="firstPlayer">The first player (usually Black).</param>
         /// <param name="secondPlayer">The second player (usually White).</param>
-        public GameController(Canvas canvas, Board board, double cellSize, IPlayer firstPlayer, IPlayer secondPlayer)
+        public GameController(Canvas canvas, Board board, double cellSize, IPlayer firstPlayer, IPlayer secondPlayer, BoardDrawer boardDrawer, IRulesEngine rulesEngine)
         {
             this.canvas = canvas;
             this.board = board;
@@ -36,6 +38,8 @@ namespace Weiqi.Desktop.Controllers
             this.firstPlayer = firstPlayer;
             this.secondPlayer = secondPlayer;
             this.currentPlayer = firstPlayer;
+            this.boardDrawer = boardDrawer;
+            this.rulesEngine = rulesEngine;
 
             blackStoneRepresentation = new CanvasStone(BoardCellState.Black);
             whiteStoneRepresentation = new CanvasStone(BoardCellState.White);
@@ -70,12 +74,10 @@ namespace Weiqi.Desktop.Controllers
                 MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            double xPos = x * cellSize;
-            double yPos = y * cellSize;
+            
             try
             {
-                var put = this.currentPlayer.MakePut(this.board, new Position(x, y));
+                var put = this.currentPlayer.MakePut(this.board, rulesEngine, new Position(x, y));
 
                 if (put == null)
                 {
@@ -83,16 +85,8 @@ namespace Weiqi.Desktop.Controllers
                     return;
                 }
                 
-                BoardCellState currentBoardCellState = currentPlayer.BoardCellState;
-                if (currentBoardCellState == BoardCellState.Black)
-                {
-                    blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
-                }
-                else
-                {
-                    whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
-                }
-
+                DrawBoard();
+                
                 currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
             }
             catch(Exception e)
@@ -101,7 +95,51 @@ namespace Weiqi.Desktop.Controllers
                 MessageBox.Show("The cell is already occupied!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            
+            CheckGameOver();
+        }
 
+        private void CheckGameOver()
+        {
+            if (rulesEngine.IsGameOver(board))
+            {
+                var blackScore = rulesEngine.CalculateScore(board, BoardCellState.Black);
+                var whiteScore = rulesEngine.CalculateScore(board, BoardCellState.White);
+                var winner = blackScore > whiteScore ? "Black" : "White";
+        
+                MessageBoxResult result = MessageBox.Show(
+                    $"Game Over! Black: {blackScore}, White: {whiteScore}. {winner} wins!",
+                    "Game Over",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                
+                if (result == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
+        }
+
+        private void DrawBoard()
+        {
+            boardDrawer.DrawBoard();
+            for (int i = 0; i < board.Size; i++)
+            {
+                for (int j = 0; j < board.Size; j++)
+                {
+                    double xPos = i * cellSize;
+                    double yPos = j * cellSize;
+
+                    if (board.GetCellState(new Position(i, j)) == BoardCellState.Black)
+                    {
+                        blackStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                    }
+                    else if (board.GetCellState(new Position(i, j)) == BoardCellState.White)
+                    {
+                        whiteStoneRepresentation.Draw(canvas, xPos, yPos, cellSize);
+                    }
+                }
+            }
         }
     }
 }

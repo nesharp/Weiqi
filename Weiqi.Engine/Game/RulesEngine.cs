@@ -9,9 +9,15 @@ namespace Weiqi.Engine.Game
     public class RulesEngine : IRulesEngine
     {
         public bool IsPutLegal(Board board, Put put)
-        {   
+        {
             if (!IsValidPosition(board, put.Position))
             {
+                return false;
+            }
+            
+            if (IsGameOver(board))
+            {
+                Console.WriteLine("Game is over");
                 return false;
             }
             
@@ -20,7 +26,9 @@ namespace Weiqi.Engine.Game
 
             try
             {
-                var neighboringEnemyGroups = GetNeighboringEnemyGroups(board, put.Position);
+                boardCopy.SetCellState(put);
+                
+                var neighboringEnemyGroups = GetNeighboringEnemyGroups(boardCopy, put.Position);
                 foreach (var group in neighboringEnemyGroups)
                 {
                     if (group.Liberties.Count == 0)
@@ -28,8 +36,8 @@ namespace Weiqi.Engine.Game
                         RemoveGroup(boardCopy, group);
                     }
                 }
-            
-                var newGroup = GetGroupAtPosition(board, put.Position);
+
+                var newGroup = GetGroupAtPosition(boardCopy, put.Position);
                 var liberties = newGroup.Liberties;
                 if (liberties.Count == 0)
                 {
@@ -79,17 +87,27 @@ namespace Weiqi.Engine.Game
             return false;
         }
 
-        public int CalculateScore(Board board, BoardCellState boardCellState)
+        public double CalculateScore(Board board, BoardCellState boardCellState)
         {
+            var komi = 6.5;
+            
             var territories = FindTerritories(board);
-
+            
             if (territories.TryGetValue(boardCellState, out var stoneTerritory))
             {
-                return stoneTerritory.Count;
+                if (boardCellState == BoardCellState.White)
+                {
+                    return stoneTerritory.Count + komi;
+                } 
+                else
+                {
+                    return stoneTerritory.Count;
+                }
             }
-
+            
             return 0;
         }
+
         
         private Board CopyBoard(Board board)
         {
@@ -116,6 +134,21 @@ namespace Weiqi.Engine.Game
             };
 
             var visited = new HashSet<Position>();
+            
+            int blackStoneCount = 0;
+            int whiteStoneCount = 0;
+
+            for (int x = 0; x < board.Size; x++)
+            {
+                for (int y = 0; y < board.Size; y++)
+                {
+                    var position = new Position(x, y);
+                    var stone = board.GetCellState(position);
+                    if (stone == BoardCellState.Black) blackStoneCount++;
+                    if (stone == BoardCellState.White) whiteStoneCount++;
+                }
+            }
+            
             for (int x = 0; x < board.Size; x++)
             {
                 for (int y = 0; y < board.Size; y++)
@@ -132,8 +165,7 @@ namespace Weiqi.Engine.Game
                         visited.Add(position);
                         continue;
                     }
-
-                    // Empty position not visited yet
+                    
                     var territoryPositions = new HashSet<Position>();
                     var borderingCellStates = new HashSet<BoardCellState>();
 
@@ -163,8 +195,7 @@ namespace Weiqi.Engine.Game
                             }
                         }
                     }
-
-                    // Determine owner of the territory
+                    
                     BoardCellState owner;
                     if (borderingCellStates.Count == 1)
                     {
@@ -172,7 +203,17 @@ namespace Weiqi.Engine.Game
                     }
                     else
                     {
-                        owner = BoardCellState.None; // Neutral or disputed territory
+                        owner = BoardCellState.None;
+                    }
+
+                    // If there is only one stone of a color on the board, the territory is not owned by that color
+                    if (owner == BoardCellState.Black && blackStoneCount == 1)
+                    {
+                        owner = BoardCellState.None;
+                    }
+                    if (owner == BoardCellState.White && whiteStoneCount == 1)
+                    {
+                        owner = BoardCellState.None;
                     }
 
                     if (!territories.ContainsKey(owner))
@@ -186,15 +227,28 @@ namespace Weiqi.Engine.Game
                     }
                 }
             }
+            
+            var maxCountStoneInBoard = board.Size * board.Size - 1;
+
+            if (territories[BoardCellState.Black].Count == maxCountStoneInBoard)
+            {
+                territories[BoardCellState.Black].Clear();
+            }
+            else if (territories[BoardCellState.White].Count == maxCountStoneInBoard)
+            {
+                territories[BoardCellState.White].Clear();
+            }
 
             return territories;
         }
+
 
         private Group GetGroupAtPosition(Board board, Position position)
         {
             var cellState = board.GetCellState(position);
             if (cellState == BoardCellState.None)
             {
+                Console.WriteLine("Position is empty");
                 throw new InvalidOperationException("Position is empty");
             }
 

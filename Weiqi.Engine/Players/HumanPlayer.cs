@@ -1,4 +1,5 @@
 using Weiqi.Engine.Game;
+using Weiqi.Engine.Interfaces;
 using Weiqi.Engine.Models;
 
 namespace Weiqi.Engine.Players;
@@ -8,10 +9,10 @@ public class HumanPlayer:Player
     public HumanPlayer(BoardCellState boardCellState) : base(boardCellState)
     {
     }
-    public override Put MakePut(Board board, Position position)
+
+    public override Put MakePut(Board board, IRulesEngine rulesEngine, Position position)
     {
         Put put = new Put(position, this.BoardCellState);
-        RulesEngine rulesEngine = new RulesEngine();
         
         if (!rulesEngine.IsPutLegal(board, put))
         {
