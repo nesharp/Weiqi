@@ -8,5 +8,5 @@ public interface IRulesEngine
     bool IsPutLegal(Board board, Put put);
     void ApplyPut(Board board, Put put);
     bool IsGameOver(Board board);
-    int CalculateScore(Board board, BoardCellState boardCellState);
+    double CalculateScore(Board board, BoardCellState boardCellState);
 }
